@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Carolina Mercantile Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0d1b2a;--navy2:#152334;--navy3:#1e3045;
+    --gold:#c9a84c;--gold2:#e8c96a;
+    --steel2:#6ba3c8;--green2:#3da068;--green3:#7ee8a2;
+    --red:#a33030;--red2:#d94f4f;--muted:#6b8299;--muted2:#8ba5bc;
+    --border:rgba(201,168,76,0.15);--border2:rgba(201,168,76,0.3);
+    --text:#e8eef4;--text2:#a8bfcf;
+    --surface:rgba(255,255,255,0.03);--surface2:rgba(255,255,255,0.06);
+    --radius:12px;--radius-sm:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Syne',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto;overflow-x:hidden;}
+  .app-header{background:var(--navy2);border-bottom:1px solid var(--border);padding:14px 16px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  .app-logo{display:flex;align-items:center;gap:8px;}
+  .logo-mark{width:32px;height:32px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--navy);}
+  .logo-text{font-size:13px;font-weight:700;color:var(--text);}
+  .logo-sub{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .header-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 8px;border-radius:20px;background:rgba(45,122,79,0.2);color:var(--green3);border:1px solid rgba(45,122,79,0.3);}
+  .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--navy2);border-top:1px solid var(--border);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+  .nav-btn{flex:1;padding:10px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--muted);font-family:'Syne',sans-serif;transition:color 0.2s;}
+  .nav-btn.active{color:var(--gold);}
+  .nav-icon{font-size:15px;}.nav-label{font-size:8px;letter-spacing:0.3px;font-weight:500;}
+  .content{padding:16px 16px 90px;}
+  .screen{display:none;}.screen.active{display:block;}
+  .sl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+  .page-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;}
+  .page-sub{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:16px;}
+  .card{background:var(--navy2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+  .card-hi{border-color:var(--border2);}
+  .field{margin-bottom:12px;}.field:last-child{margin-bottom:0;}
+  .fl{font-size:10px;color:var(--muted2);font-family:'DM Mono',monospace;letter-spacing:0.5px;margin-bottom:5px;display:block;}
+  .fi{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-size:14px;color:var(--text);font-family:'Syne',sans-serif;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+  .fi:focus{border-color:var(--gold);}
+  .fi::placeholder{color:var(--muted);font-size:13px;}
+  select.fi{cursor:pointer;}textarea.fi{resize:none;min-height:60px;}
+  .r2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .src-row{display:flex;gap:6px;margin-bottom:12px;}
+  .src-btn{flex:1;padding:7px 4px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:500;color:var(--muted2);cursor:pointer;text-align:center;font-family:'Syne',sans-serif;transition:all 0.15s;}
+  .src-btn.active{background:rgba(107,163,200,0.15);border-color:var(--steel2);color:var(--steel2);}
+  .pt-row{display:flex;gap:6px;margin-bottom:12px;}
+  .pt-btn{flex:1;padding:7px 4px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:500;color:var(--muted2);cursor:pointer;text-align:center;font-family:'Syne',sans-serif;transition:all 0.15s;}
+  .pt-btn.active{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold2);}
+  .comm-block{background:var(--navy3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;}
+  .comm-block.first{border-color:var(--border2);}
+  .comm-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .comm-name{font-size:13px;font-weight:600;color:var(--gold2);}
+  .comm-rm{font-size:16px;color:var(--muted);background:none;border:none;cursor:pointer;}
+  .csl{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.5px;}
+  .csv{font-size:13px;font-weight:500;color:var(--text);margin-top:2px;}.csv.gold{color:var(--gold2);}
+  .add-comm-btn{width:100%;padding:10px;border:1px dashed var(--border2);border-radius:var(--radius-sm);background:none;cursor:pointer;font-size:12px;color:var(--muted2);font-family:'Syne',sans-serif;transition:all 0.15s;margin-top:4px;}
+  .reconf-row{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;}
+  .reconf-chk{width:18px;height:18px;border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:all 0.15s;}
+  .reconf-chk.checked{background:var(--gold);border-color:var(--gold);color:var(--navy);}
+  .reconf-lbl{font-size:12px;color:var(--muted2);}
+  .cta-btn{width:100%;padding:14px;background:var(--gold);border:none;border-radius:var(--radius);font-size:14px;font-weight:700;color:var(--navy);font-family:'Syne',sans-serif;cursor:pointer;transition:all 0.15s;margin-top:4px;}
+  .cta-btn:active{transform:scale(0.98);}
+  .sec-btn{width:100%;padding:11px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;font-weight:500;color:var(--text2);font-family:'Syne',sans-serif;cursor:pointer;transition:all 0.15s;margin-top:8px;}
+  .back-btn{background:none;border:none;cursor:pointer;color:var(--muted2);font-size:13px;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:4px;margin-bottom:14px;padding:0;}
+  .bq-card{background:var(--navy3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color 0.2s;}
+  .bq-card.winner{border-color:var(--green2);}
+  .bq-card.lost-bq{border-color:rgba(217,79,79,0.3);opacity:0.7;}
+  .bq-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .bq-name{font-size:14px;font-weight:600;color:var(--text);}
+  .bq-st{font-size:9px;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace;letter-spacing:0.5px;font-weight:500;}
+  .bq-st.quoted{background:rgba(107,163,200,0.15);color:var(--steel2);border:1px solid rgba(107,163,200,0.3);}
+  .bq-st.accepted{background:rgba(45,122,79,0.2);color:var(--green3);border:1px solid rgba(45,122,79,0.3);}
+  .bq-st.negotiating{background:rgba(201,168,76,0.12);color:var(--gold2);border:1px solid rgba(201,168,76,0.25);}
+  .bq-st.lost{background:rgba(217,79,79,0.12);color:var(--red2);border:1px solid rgba(217,79,79,0.25);}
+  .bq-st.declined{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+  .wtag{font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(45,122,79,0.2);color:var(--green3);border:1px solid rgba(45,122,79,0.3);font-family:'DM Mono',monospace;margin-left:6px;}
+  .bq-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .bql{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .bqv{font-size:13px;font-weight:500;color:var(--text);margin-top:2px;}.bqv.gr{color:var(--green3);}.bqv.pe{color:var(--muted);font-size:11px;}
+  .add-buyer-btn{width:100%;padding:10px;border:1px dashed var(--border2);border-radius:var(--radius-sm);background:none;cursor:pointer;font-size:12px;color:var(--muted2);font-family:'Syne',sans-serif;transition:all 0.15s;}
+  .margin-box{background:rgba(45,122,79,0.12);border:1px solid rgba(45,122,79,0.25);border-radius:var(--radius);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+  .ml{font-size:10px;color:var(--green2);font-family:'DM Mono',monospace;letter-spacing:0.5px;}
+  .mv{font-size:22px;font-weight:700;color:var(--green3);margin-top:2px;}
+  .ms{font-size:10px;color:var(--green2);margin-top:2px;}
+  .tab-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+  .tab-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;font-size:12px;color:var(--muted2);font-family:'Syne',sans-serif;font-weight:500;transition:all 0.15s;}
+  .tab-btn.active{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold2);}
+  .deal-card{background:var(--navy2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;transition:border-color 0.15s;position:relative;}
+  .deal-card:hover{border-color:var(--border2);}
+  .dch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+  .dsup{font-size:15px;font-weight:600;color:var(--text);}
+  .dcomm{font-size:12px;color:var(--muted2);margin-bottom:8px;}
+  .dftr{display:flex;justify-content:space-between;align-items:center;}
+  .dport{font-size:11px;color:var(--steel2);font-family:'DM Mono',monospace;}
+  .dmgn{font-size:14px;font-weight:600;color:var(--green3);}
+  .dst{font-size:9px;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace;}
+  .ds-open{background:rgba(107,163,200,0.15);color:var(--steel2);border:1px solid rgba(107,163,200,0.3);}
+  .ds-closed{background:rgba(45,122,79,0.15);color:var(--green3);border:1px solid rgba(45,122,79,0.3);}
+  .con-card{background:var(--navy2);border:1px solid var(--border);border-radius:var(--radius);padding:13px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+  .con-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;}
+  .av-s{background:rgba(201,168,76,0.15);color:var(--gold2);border:1px solid rgba(201,168,76,0.2);}
+  .av-b{background:rgba(107,163,200,0.15);color:var(--steel2);border:1px solid rgba(107,163,200,0.2);}
+  .con-info{flex:1;}
+  .con-name{font-size:14px;font-weight:600;color:var(--text);}
+  .con-det{font-size:11px;color:var(--muted2);margin-top:2px;}
+  .con-cnt{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:3px;}
+  .add-con-btn{width:100%;padding:12px;border:1px dashed var(--border2);border-radius:var(--radius);background:none;cursor:pointer;font-size:13px;color:var(--muted2);font-family:'Syne',sans-serif;transition:all 0.15s;margin-bottom:8px;}
+  .dh{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+  .dh-sup{font-size:18px;font-weight:700;color:var(--gold2);margin-bottom:4px;}
+  .dh-meta{font-size:11px;color:var(--muted2);font-family:'DM Mono',monospace;}
+  .dh-pills{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+  .pill{font-size:10px;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace;}
+  .pill-port{background:rgba(107,163,200,0.15);color:var(--steel2);border:1px solid rgba(107,163,200,0.3);}
+  .pill-src{background:var(--surface2);color:var(--muted2);border:1px solid var(--border);}
+  .pill-rc{background:rgba(201,168,76,0.12);color:var(--gold2);border:1px solid rgba(201,168,76,0.25);}
+  .ctab-row{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;}
+  .ctab{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:none;cursor:pointer;font-size:11px;color:var(--muted2);font-family:'Syne',sans-serif;font-weight:500;white-space:nowrap;flex-shrink:0;transition:all 0.15s;}
+  .ctab.active{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold2);}
+  .neg-thread{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+  .neg-row{display:flex;align-items:flex-start;gap:8px;}.neg-row.mine{flex-direction:row-reverse;}
+  .neg-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;margin-top:2px;font-family:'DM Mono',monospace;}
+  .nav-them{background:rgba(107,163,200,0.15);color:var(--steel2);border:1px solid rgba(107,163,200,0.2);}
+  .nav-me{background:rgba(201,168,76,0.15);color:var(--gold2);border:1px solid rgba(201,168,76,0.2);}
+  .neg-bubble{max-width:75%;}
+  .neg-who{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:3px;}
+  .neg-row.mine .neg-who{text-align:right;}
+  .neg-pb{background:var(--navy3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 11px;}
+  .neg-row.mine .neg-pb{background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.2);}
+  .neg-pl{display:flex;align-items:center;gap:6px;}
+  .neg-row.mine .neg-pl{justify-content:flex-end;}
+  .neg-pv{font-size:16px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;}
+  .neg-row.mine .neg-pv{color:var(--gold2);}
+  .neg-arr{font-size:9px;}.neg-arr.up{color:var(--red2);}.neg-arr.down{color:var(--green3);}
+  .neg-mv{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;}
+  .neg-row.mine .neg-mv{text-align:right;}
+  .ci{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--radius);padding:12px;margin-bottom:8px;}
+  .ci-lbl{font-size:10px;color:var(--gold2);font-family:'DM Mono',monospace;margin-bottom:8px;}
+  .ci-row{display:flex;gap:8px;align-items:center;}
+  .ci-inp{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:9px 12px;font-size:16px;color:var(--text);font-family:'DM Mono',monospace;outline:none;}
+  .ci-inp:focus{border-color:var(--gold);}
+  .ci-save{padding:9px 14px;background:var(--gold);border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:700;color:var(--navy);font-family:'Syne',sans-serif;cursor:pointer;white-space:nowrap;}
+  .ci-cancel{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;margin-top:6px;display:block;}
+  .neg-done-box{background:rgba(45,122,79,0.1);border:1px solid rgba(45,122,79,0.25);border-radius:var(--radius);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .ndl{font-size:10px;color:var(--green2);font-family:'DM Mono',monospace;}
+  .ndv{font-size:20px;font-weight:700;color:var(--green3);font-family:'DM Mono',monospace;}
+  .nds{font-size:9px;color:var(--green2);margin-top:2px;}
+  .cb-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+  .cb{padding:10px;border-radius:var(--radius-sm);font-size:11px;font-weight:600;text-align:center;cursor:pointer;font-family:'Syne',sans-serif;transition:all 0.15s;}
+  .cb-them{background:rgba(107,163,200,0.1);border:1px solid rgba(107,163,200,0.25);color:var(--steel2);}
+  .cb-me{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:var(--gold2);}
+  .neg-acts{display:flex;gap:8px;margin-bottom:10px;}
+  .neg-done-btn{flex:1;padding:10px;background:rgba(45,122,79,0.15);border:1px solid rgba(45,122,79,0.3);border-radius:var(--radius-sm);font-size:12px;font-weight:600;color:var(--green3);font-family:'Syne',sans-serif;cursor:pointer;text-align:center;}
+  .neg-lost-btn{flex:1;padding:10px;background:rgba(217,79,79,0.1);border:1px solid rgba(217,79,79,0.25);border-radius:var(--radius-sm);font-size:12px;font-weight:600;color:var(--red2);font-family:'Syne',sans-serif;cursor:pointer;text-align:center;}
+  .rp-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .rp{padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:none;font-size:11px;color:var(--muted2);font-family:'Syne',sans-serif;cursor:pointer;transition:all 0.15s;}
+  .rp.active{background:rgba(217,79,79,0.15);border-color:rgba(217,79,79,0.4);color:var(--red2);}
+  .lb-card{background:var(--navy2);border:1px solid rgba(217,79,79,0.2);border-radius:var(--radius);padding:13px 16px;position:relative;}
+  .lbh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+  .lbs-name{font-size:15px;font-weight:600;color:var(--text);}
+  .lbs-comm{font-size:11px;color:var(--muted2);margin-top:2px;}
+  .lb-badge{font-size:9px;padding:3px 8px;border-radius:20px;background:rgba(217,79,79,0.12);color:var(--red2);border:1px solid rgba(217,79,79,0.25);font-family:'DM Mono',monospace;}
+  .lb-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
+  .lbsl{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .lbsv{font-size:12px;font-weight:500;color:var(--text);margin-top:2px;}.lbsv.red{color:var(--red2);}
+  .lb-reason{font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(217,79,79,0.1);color:var(--red2);border:1px solid rgba(217,79,79,0.2);display:inline-block;}
+  .lqf{background:var(--navy3);border:1px solid rgba(217,79,79,0.2);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+  .lqf-title{font-size:13px;font-weight:600;color:var(--red2);margin-bottom:12px;}
+  .lost-log-btn{width:100%;padding:11px;background:rgba(217,79,79,0.15);border:1px solid rgba(217,79,79,0.3);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--red2);font-family:'Syne',sans-serif;cursor:pointer;margin-top:10px;}
+  /* SWIPE TO DELETE */
+  .swipe-wrap{position:relative;margin-bottom:10px;border-radius:var(--radius);overflow:hidden;}
+  .swipe-wrap .deal-card,.swipe-wrap .lb-card{margin-bottom:0;border-radius:var(--radius);position:relative;z-index:1;transition:transform 0.25s ease;touch-action:pan-y;}
+  .swipe-wrap .deal-card.swiped,.swipe-wrap .lb-card.swiped{transform:translateX(-80px);}
+  .del-reveal{position:absolute;right:0;top:0;bottom:0;width:80px;background:var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border-radius:0 var(--radius) var(--radius) 0;z-index:0;}
+  .del-reveal-icon{font-size:18px;color:#fff;}
+  .del-reveal-lbl{font-size:9px;color:#ffb3b3;font-family:'DM Mono',monospace;letter-spacing:0.5px;}
+  /* HOVER DELETE (desktop) */
+  .swipe-wrap:hover .hover-del{opacity:1;}
+  .hover-del{position:absolute;top:10px;right:10px;z-index:10;width:28px;height:28px;border-radius:6px;background:rgba(163,48,48,0.2);border:1px solid rgba(163,48,48,0.35);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;opacity:0;transition:opacity 0.15s;}
+  .hover-del:hover{background:rgba(163,48,48,0.4);}
+  .mo{position:fixed;inset:0;background:rgba(13,27,42,0.92);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+  .mo.open{opacity:1;pointer-events:all;}
+  .modal{width:100%;max-width:430px;margin:0 auto;background:var(--navy2);border:1px solid var(--border2);border-radius:var(--radius) var(--radius) 0 0;padding:20px 16px 32px;transform:translateY(20px);transition:transform 0.2s;max-height:90vh;overflow-y:auto;}
+  .mo.open .modal{transform:translateY(0);}
+  .modal-title{font-size:16px;font-weight:700;color:var(--gold2);margin-bottom:16px;}
+  .mc{float:right;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;margin-top:-2px;}
+  .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="app-header">
+  <div class="app-logo">
+    <div class="logo-mark">CM</div>
+    <div>
+      <div class="logo-text">Carolina Mercantile Co.</div>
+      <div class="logo-sub">NF EXPORT · FAS · USD</div>
+    </div>
+  </div>
+  <div class="header-badge">● LIVE</div>
+</div>
+<div class="content">
+  <!-- NEW DEAL -->
+  <div class="screen active" id="screen-deal">
+    <div class="page-title">New Deal</div>
+    <div class="page-sub">NON-FERROUS EXPORT</div>
+    <div class="sl">Source of contact</div>
+    <div class="src-row">
+      <button class="src-btn active" onclick="setSrc(this)">Call</button>
+      <button class="src-btn" onclick="setSrc(this)">WhatsApp</button>
+      <button class="src-btn" onclick="setSrc(this)">Text</button>
+      <button class="src-btn" onclick="setSrc(this)">Email</button>
+    </div>
+    <div class="sl">Supplier</div>
+    <div class="card">
+      <div class="field">
+        <label class="fl">Supplier name</label>
+        <select class="fi" id="sup-sel" onchange="onSupSel()">
+          <option value="">— select supplier —</option>
+          <option value="JJ Cores">JJ Cores</option>
+          <option value="new">+ Add new supplier</option>
+        </select>
+      </div>
+      <div class="r2">
+        <div class="field"><label class="fl">Contact</label><input class="fi" id="sup-con" type="text" placeholder="name"></div>
+        <div class="field"><label class="fl">Port (FAS)</label><input class="fi" id="deal-port" type="text" placeholder="e.g. LA/LB"></div>
+      </div>
+      <div class="r2">
+        <div class="field"><label class="fl">Container size</label>
+          <select class="fi" id="cnt-size"><option>20ft</option><option>40ft</option><option>40ft HC</option></select>
+        </div>
+        <div class="field"><label class="fl">Loading window</label><input class="fi" id="load-win" type="text" placeholder="e.g. May 10–20"></div>
+      </div>
+    </div>
+    <div class="sl">Commodities</div>
+    <div id="comm-list"></div>
+    <button class="add-comm-btn" onclick="addComm()">+ Add commodity (combo load)</button>
+    <div class="card" style="margin-top:12px;">
+      <div class="field"><label class="fl">Notes</label><textarea class="fi" id="deal-notes" placeholder="e.g. photos attached..."></textarea></div>
+      <div class="reconf-row" onclick="togReconf()">
+        <div class="reconf-chk checked" id="rc-chk">✓</div>
+        <div class="reconf-lbl">Subject to reconfirmation</div>
+      </div>
+    </div>
+    <button class="cta-btn" onclick="saveDeal()">Save &amp; Get Buyer Quotes →</button>
+  </div>
+  <!-- DEAL DETAIL -->
+  <div class="screen" id="screen-detail">
+    <button class="back-btn" onclick="showSc('history')">← Back to deals</button>
+    <div class="dh" id="dh"></div>
+    <div class="ctab-row" id="ctabs"></div>
+    <div id="cqa"></div>
+  </div>
+  <!-- NEGOTIATION -->
+  <div class="screen" id="screen-neg">
+    <button class="back-btn" id="neg-back">← Back</button>
+    <div id="neg-body"></div>
+  </div>
+  <!-- DEALS -->
+  <div class="screen" id="screen-history">
+    <div class="page-title">Deals</div>
+    <div class="page-sub">ALL NF EXPORT</div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="filtDeals('all',this)">All</button>
+      <button class="tab-btn" onclick="filtDeals('open',this)">Open</button>
+      <button class="tab-btn" onclick="filtDeals('closed',this)">Closed</button>
+    </div>
+    <div id="deals-list"></div>
+  </div>
+  <!-- SUPPLIERS -->
+  <div class="screen" id="screen-suppliers">
+    <div class="page-title">Suppliers</div><div class="page-sub">SAVED CONTACTS</div>
+    <button class="add-con-btn" onclick="openCon('supplier')">+ Add new supplier</button>
+    <div id="sup-list"></div>
+  </div>
+  <!-- BUYERS -->
+  <div class="screen" id="screen-buyers">
+    <div class="page-title">Buyers</div><div class="page-sub">END USERS</div>
+    <button class="add-con-btn" onclick="openCon('buyer')">+ Add new buyer</button>
+    <div id="buy-list"></div>
+  </div>
+  <!-- LOST BIDS -->
+  <div class="screen" id="screen-lost">
+    <div class="page-title">Lost Bids</div><div class="page-sub">INTEL &amp; HISTORY</div>
+    <div class="lqf">
+      <div class="lqf-title">Log a lost bid</div>
+      <div class="r2">
+        <div class="field"><label class="fl">Supplier</label>
+          <select class="fi" id="lb-sup"><option value="">— select —</option><option>JJ Cores</option><option value="new">+ Add new</option></select>
+        </div>
+        <div class="field"><label class="fl">Lost from</label>
+          <select class="fi" id="lb-side"><option value="supplier">Supplier side</option><option value="buyer">Buyer side</option></select>
+        </div>
+      </div>
+      <div class="field"><label class="fl">Commodity</label><input class="fi" id="lb-comm" type="text" placeholder="e.g. Alternators"></div>
+      <div class="r3">
+        <div class="field"><label class="fl">Your bid ($/LB)</label><input class="fi" id="lb-bid" type="text" inputmode="decimal" placeholder="0.8350" style="font-family:'DM Mono',monospace;"></div>
+        <div class="field"><label class="fl">Their price (opt.)</label><input class="fi" id="lb-their" type="text" inputmode="decimal" placeholder="—" style="font-family:'DM Mono',monospace;"></div>
+        <div class="field"><label class="fl">Total LBS</label><input class="fi" id="lb-lbs" type="text" inputmode="numeric" placeholder="176000"></div>
+      </div>
+      <div class="r2">
+        <div class="field"><label class="fl">Port</label><input class="fi" id="lb-port" type="text" placeholder="e.g. LA/LB"></div>
+        <div class="field"><label class="fl">Competitor (opt.)</label><input class="fi" id="lb-comp" type="text" placeholder="if known"></div>
+      </div>
+      <div class="field"><label class="fl">Reason lost</label>
+        <div class="rp-row" id="lb-reasons">
+          <button class="rp active" onclick="setLBR(this,'Higher bid')">Higher bid</button>
+          <button class="rp" onclick="setLBR(this,'Spread')">Couldn't make spread</button>
+          <button class="rp" onclick="setLBR(this,'Timing')">Timing</button>
+          <button class="rp" onclick="setLBR(this,'Relationship')">Relationship</button>
+          <button class="rp" onclick="setLBR(this,'Other')">Other</button>
+        </div>
+      </div>
+      <div class="field"><label class="fl">Notes</label><input class="fi" id="lb-notes" type="text" placeholder="optional"></div>
+      <button class="lost-log-btn" onclick="saveLB()">Log Lost Bid</button>
+    </div>
+    <div class="sl">History</div>
+    <div id="lb-list"></div>
+  </div>
+</div>
+<!-- NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="nav('deal',this)"><span class="nav-icon">＋</span><span class="nav-label">New Deal</span></button>
+  <button class="nav-btn" onclick="nav('history',this)"><span class="nav-icon">◎</span><span class="nav-label">Deals</span></button>
+  <button class="nav-btn" onclick="nav('suppliers',this)"><span class="nav-icon">◈</span><span class="nav-label">Suppliers</span></button>
+  <button class="nav-btn" onclick="nav('buyers',this)"><span class="nav-icon">◉</span><span class="nav-label">Buyers</span></button>
+  <button class="nav-btn" onclick="nav('lost',this)"><span class="nav-icon">✕</span><span class="nav-label">Lost Bids</span></button>
+</div>
+<!-- CONTACT MODAL -->
+<div class="mo" id="con-mo">
+  <div class="modal">
+    <div class="modal-title" id="con-mo-title">Add Contact <button class="mc" onclick="closeMo('con-mo')">×</button></div>
+    <div class="field"><label class="fl">Company name</label><input class="fi" id="mo-co" type="text" placeholder="e.g. JJ Cores"></div>
+    <div class="field"><label class="fl">Contact name</label><input class="fi" id="mo-cn" type="text" placeholder="e.g. Juan"></div>
+    <div class="field"><label class="fl">Phone / WhatsApp</label><input class="fi" id="mo-ph" type="tel" placeholder="optional"></div>
+    <div class="field"><label class="fl">Email</label><input class="fi" id="mo-em" type="email" placeholder="optional"></div>
+    <div class="field"><label class="fl">Location</label><input class="fi" id="mo-lo" type="text" placeholder="e.g. Los Angeles, CA"></div>
+    <button class="cta-btn" onclick="saveCon()">Save Contact</button>
+    <button class="sec-btn" onclick="closeMo('con-mo')">Cancel</button>
+  </div>
+</div>
+<!-- BUYER QUOTE MODAL -->
+<div class="mo" id="bq-mo">
+  <div class="modal">
+    <div class="modal-title">Add Buyer Quote <button class="mc" onclick="closeMo('bq-mo')">×</button></div>
+    <div class="field"><label class="fl">Buyer</label>
+      <select class="fi" id="bq-buyer">
+        <option value="">— select buyer —</option>
+        <option>Steelbro</option><option>Jain Metals</option><option>United Metals</option>
+        <option value="new">+ Add new buyer</option>
+      </select>
+    </div>
+    <div class="field"><label class="fl">Your opening offer to buyer ($/LB)</label><input class="fi" id="bq-price" type="text" inputmode="decimal" placeholder="0.8800" style="font-family:'DM Mono',monospace;"></div>
+    <div class="field"><label class="fl">Notes</label><input class="fi" id="bq-notes" type="text" placeholder="optional"></div>
+    <button class="cta-btn" onclick="saveBQ()">Save &amp; Start Negotiation</button>
+    <button class="sec-btn" onclick="closeMo('bq-mo')">Cancel</button>
+  </div>
+</div>
+<!-- LOST FROM NEG MODAL -->
+<div class="mo" id="lost-mo">
+  <div class="modal">
+    <div class="modal-title">Mark as Lost <button class="mc" onclick="closeMo('lost-mo')">×</button></div>
+    <div class="field"><label class="fl">Reason lost</label>
+      <div class="rp-row" id="lm-reasons">
+        <button class="rp active" onclick="setLMR(this,'Higher bid')">Higher bid</button>
+        <button class="rp" onclick="setLMR(this,'Spread')">Couldn't make spread</button>
+        <button class="rp" onclick="setLMR(this,'Timing')">Timing</button>
+        <button class="rp" onclick="setLMR(this,'Relationship')">Relationship</button>
+        <button class="rp" onclick="setLMR(this,'Other')">Other</button>
+      </div>
+    </div>
+    <div class="field"><label class="fl">Competitor (optional)</label><input class="fi" id="lm-comp" type="text" placeholder="if known"></div>
+    <div class="field"><label class="fl">Their price (optional)</label><input class="fi" id="lm-price" type="text" inputmode="decimal" placeholder="—" style="font-family:'DM Mono',monospace;"></div>
+    <div class="field"><label class="fl">Notes</label><input class="fi" id="lm-notes" type="text" placeholder="optional"></div>
+    <button class="lost-log-btn" style="border-radius:var(--radius);" onclick="confirmLost()">Confirm Lost Bid</button>
+    <button class="sec-btn" onclick="closeMo('lost-mo')">Cancel</button>
+  </div>
+</div>
+<script>
+const S={
+  suppliers:[{id:'s1',co:'JJ Cores',cn:'Juan',ph:'',em:'',lo:'Los Angeles, CA'}],
+  buyers:[{id:'b1',co:'Steelbro',cn:'',ph:'',em:'',lo:''},{id:'b2',co:'Jain Metals',cn:'',ph:'',em:'',lo:'India'},{id:'b3',co:'United Metals',cn:'',ph:'',em:'',lo:''}],
+  deals:[],lostBids:[],
+  src:'Call',rc:true,comms:[],conType:'supplier',
+  bqDeal:null,bqComm:null,
+  nDeal:null,nComm:null,nBuyer:null,nSide:null,pWho:null,
+  lmReason:'Higher bid',lbReason:'Higher bid'
+};
+let cid=10;
+
+// ─── LOCAL STORAGE ────────────────────────────────────────
+function saveData(){
+  try{
+    localStorage.setItem('cmc_deals',JSON.stringify(S.deals));
+    localStorage.setItem('cmc_suppliers',JSON.stringify(S.suppliers));
+    localStorage.setItem('cmc_buyers',JSON.stringify(S.buyers));
+    localStorage.setItem('cmc_lostbids',JSON.stringify(S.lostBids));
+  }catch(e){console.warn('Save failed:',e);}
+}
+function loadData(){
+  try{
+    const deals=localStorage.getItem('cmc_deals');
+    const suppliers=localStorage.getItem('cmc_suppliers');
+    const buyers=localStorage.getItem('cmc_buyers');
+    const lost=localStorage.getItem('cmc_lostbids');
+    if(deals)S.deals=JSON.parse(deals);
+    if(suppliers)S.suppliers=JSON.parse(suppliers);
+    if(buyers)S.buyers=JSON.parse(buyers);
+    if(lost)S.lostBids=JSON.parse(lost);
+    rebuildDropdowns();
+  }catch(e){console.warn('Load failed:',e);}
+}
+function rebuildDropdowns(){
+  const supSel=document.getElementById('sup-sel');
+  const lbSup=document.getElementById('lb-sup');
+  S.suppliers.forEach(s=>{
+    if(![...supSel.options].find(o=>o.value===s.co)){const o=document.createElement('option');o.value=s.co;o.textContent=s.co;supSel.insertBefore(o,supSel.lastElementChild);}
+    if(![...lbSup.options].find(o=>o.value===s.co)){const o=document.createElement('option');o.value=s.co;o.textContent=s.co;lbSup.insertBefore(o,lbSup.lastElementChild);}
+  });
+  const bqSel=document.getElementById('bq-buyer');
+  S.buyers.forEach(b=>{
+    if(![...bqSel.options].find(o=>o.value===b.co)){const o=document.createElement('option');o.value=b.co;o.textContent=b.co;bqSel.insertBefore(o,bqSel.lastElementChild);}
+  });
+}
+
+window.onload=()=>{addComm();loadData();rSups();rBuys();rDeals('all');rLBs();showSc('deal');document.querySelectorAll('.nav-btn')[0].classList.add('active');};
+
+function nav(sc,btn){showSc(sc);document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(sc==='history')rDeals('all');if(sc==='suppliers')rSups();if(sc==='buyers')rBuys();if(sc==='lost')rLBs();}
+function showSc(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');}
+function openMo(id){document.getElementById(id).classList.add('open');}
+function closeMo(id){document.getElementById(id).classList.remove('open');}
+function setSrc(btn){document.querySelectorAll('.src-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');S.src=btn.textContent;}
+function togReconf(){S.rc=!S.rc;const e=document.getElementById('rc-chk');e.textContent=S.rc?'✓':'';e.classList.toggle('checked',S.rc);}
+function onSupSel(){if(document.getElementById('sup-sel').value==='new'){openCon('supplier');document.getElementById('sup-sel').value='';}}
+function addComm(){const id='c'+(cid++);S.comms.push({id,name:'',cnts:'',lpc:'',bp:'',pt:'fixed'});rComms();}
+function rmComm(id){S.comms=S.comms.filter(c=>c.id!==id);rComms();}
+function rComms(){
+  document.getElementById('comm-list').innerHTML=S.comms.map((c,i)=>`
+    <div class="comm-block ${i===0?'first':''}" data-cid="${c.id}">
+      <div class="comm-hdr"><div class="comm-name">${c.name||'Commodity '+(i+1)}</div>${S.comms.length>1?`<button class="comm-rm" onclick="rmComm('${c.id}')">×</button>`:''}</div>
+      <div class="field"><label class="fl">Grade / description</label><input class="fi" type="text" placeholder="e.g. Alternators" value="${c.name}" oninput="upC('${c.id}','name',this.value)"></div>
+      <div class="r3">
+        <div class="field"><label class="fl">Containers</label><input class="fi" type="text" inputmode="numeric" placeholder="4" value="${c.cnts}" oninput="upC('${c.id}','cnts',this.value)"></div>
+        <div class="field"><label class="fl">LBS / cnt ✎</label><input class="fi" type="text" inputmode="numeric" placeholder="44,000" value="${c.lpc}" oninput="upC('${c.id}','lpc',this.value)"></div>
+        <div class="field"><label class="fl">Total LBS ⟳</label><div class="fi total-lbs" style="background:rgba(201,168,76,0.05);color:var(--gold2);font-family:'DM Mono',monospace;font-size:12px;">${c.cnts&&c.lpc?Number(c.cnts*c.lpc).toLocaleString():'--'}</div></div>
+      </div>
+      <div class="pt-row">
+        <button class="pt-btn ${c.pt==='fixed'?'active':''}" onclick="setPT('${c.id}','fixed')">Fixed $/LB</button>
+        <button class="pt-btn ${c.pt==='lme'?'active':''}" onclick="setPT('${c.id}','lme')">LME + Premium</button>
+      </div>
+      <div class="r2">
+        <div class="field"><label class="fl">${c.pt==='lme'?'LME 3MO ($/LB)':'Buy price ($/LB)'}</label><input class="fi" type="text" inputmode="decimal" placeholder="0.8350" value="${c.bp}" oninput="upC('${c.id}','bp',this.value)" style="font-family:'DM Mono',monospace;"></div>
+        <div class="field"><label class="fl">Total buy value</label><div class="fi total-val" style="background:rgba(201,168,76,0.05);color:var(--gold2);font-family:'DM Mono',monospace;font-size:12px;">${c.bp&&c.cnts&&c.lpc?'$'+(c.bp*c.cnts*c.lpc).toLocaleString(undefined,{maximumFractionDigits:0}):'--'}</div></div>
+      </div>
+    </div>`).join('');
+}
+function upC(id,f,v){
+  const c=S.comms.find(x=>x.id===id);if(!c)return;
+  c[f]=v;
+  if(f==='name'){const block=document.querySelector('[data-cid="'+id+'"]');if(block){const nm=block.querySelector('.comm-name');if(nm)nm.textContent=v||('Commodity '+(S.comms.indexOf(c)+1));}return;}
+  if(f==='cnts'||f==='lpc'){const block=document.querySelector('[data-cid="'+id+'"]');if(block){const tot=block.querySelector('.total-lbs');if(tot)tot.textContent=c.cnts&&c.lpc?Number(c.cnts*c.lpc).toLocaleString():'--';const tv=block.querySelector('.total-val');if(tv)tv.textContent=c.bp&&c.cnts&&c.lpc?'$'+(c.bp*c.cnts*c.lpc).toLocaleString(undefined,{maximumFractionDigits:0}):'--';}return;}
+  if(f==='bp'){const block=document.querySelector('[data-cid="'+id+'"]');if(block){const tv=block.querySelector('.total-val');if(tv)tv.textContent=c.bp&&c.cnts&&c.lpc?'$'+(c.bp*c.cnts*c.lpc).toLocaleString(undefined,{maximumFractionDigits:0}):'--';}return;}
+  rComms();
+}
+function setPT(id,t){const c=S.comms.find(x=>x.id===id);if(c){c.pt=t;rComms();}}
+function saveDeal(){
+  const sup=document.getElementById('sup-sel').value;
+  if(!sup){alert('Please select a supplier.');return;}
+  if(!S.comms.length||!S.comms[0].name){alert('Please add at least one commodity.');return;}
+  const deal={id:'d'+Date.now(),sup,con:document.getElementById('sup-con').value,port:document.getElementById('deal-port').value||'—',cs:document.getElementById('cnt-size').value,lw:document.getElementById('load-win').value,src:S.src,notes:document.getElementById('deal-notes').value,rc:S.rc,date:new Date().toISOString().slice(0,10),status:'open',
+    comms:S.comms.map(c=>({id:'c'+Date.now()+Math.random(),name:c.name,cnts:Number(c.cnts)||0,lpc:Number(c.lpc)||0,bp:Number(c.bp)||0,pt:c.pt,sneg:[],sns:'open',abp:null,buyers:[]}))};
+  S.deals.unshift(deal);saveData();resetForm();openDetail(deal.id);
+}
+function resetForm(){['sup-sel','sup-con','deal-port','load-win','deal-notes'].forEach(id=>document.getElementById(id).value='');S.comms=[];S.rc=true;S.src='Call';document.querySelectorAll('.src-btn').forEach((b,i)=>b.classList.toggle('active',i===0));const e=document.getElementById('rc-chk');e.textContent='✓';e.classList.add('checked');addComm();}
+function openDetail(id){S.nDeal=id;S.nComm=0;showSc('detail');rDetail();}
+function closeDeal(id){const d=S.deals.find(x=>x.id===id);if(d)d.status='closed';saveData();nav('history',document.querySelectorAll('.nav-btn')[1]);}
+function rDetail(){
+  const d=S.deals.find(x=>x.id===S.nDeal);if(!d)return;
+  const tl=d.comms.reduce((s,c)=>s+c.cnts*c.lpc,0);
+  document.getElementById('dh').innerHTML=`<div class="dh-sup">${d.sup}</div><div class="dh-meta">${d.date} · ${d.comms.length} commodity${d.comms.length>1?' (combo)':''} · ${tl.toLocaleString()} LBS</div><div class="dh-pills"><span class="pill pill-port">FAS ${d.port}</span><span class="pill pill-src">${d.src}</span><span class="pill pill-src">${d.cs}</span>${d.rc?'<span class="pill pill-rc">Subj. to reconf</span>':''}${d.lw?`<span class="pill pill-src">${d.lw}</span>`:''}</div>`;
+  document.getElementById('ctabs').innerHTML=d.comms.map((c,i)=>`<button class="ctab ${i===S.nComm?'active':''}" onclick="swComm(${i})">${c.name}</button>`).join('');
+  rCQA(d,S.nComm);
+}
+function swComm(i){S.nComm=i;rDetail();}
+function rCQA(d,idx){
+  const c=d.comms[idx];const tl=c.cnts*c.lpc;const tb=c.bp*tl;
+  const best=c.buyers.filter(b=>(b.ap||b.op)&&b.status!=='lost').sort((a,b)=>(b.ap||b.op)-(a.ap||a.op))[0];
+  let mHtml='';
+  if(best){const sp=best.ap||best.op;const mpl=sp-c.bp;const tm=mpl*tl;
+    mHtml=`<div class="sl" style="margin-top:14px;">Deal margin</div><div class="margin-box"><div><div class="ml">Margin / LB</div><div class="mv">$${mpl.toFixed(4)}</div></div><div style="text-align:right;"><div class="ml">Total gross margin</div><div class="mv">$${tm.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="ms">${tl.toLocaleString()} LBS · ${best.buyer}</div></div></div>
+    ${best.status==='accepted'?`<button class="cta-btn" onclick="closeDeal('${d.id}')" style="margin-top:12px;background:var(--green2);color:#fff;">✓ Close Deal &amp; Go to Deals</button>`:''}`;
+  }
+  const sLast=c.sneg.length?c.sneg[c.sneg.length-1]:null;
+  const sSumm=c.sns==='done'?`<div style="font-size:11px;color:var(--green3);font-family:'DM Mono',monospace;">✓ Agreed: $${(c.abp||c.bp).toFixed(4)}/LB</div>`:c.sneg.length?`<div style="font-size:11px;color:var(--gold2);font-family:'DM Mono',monospace;">${c.sneg.length} rounds · Last: $${sLast.price.toFixed(4)} (${sLast.who==='me'?'you':'them'})</div>`:`<div style="font-size:11px;color:var(--muted);">No rounds yet — tap to start</div>`;
+  document.getElementById('cqa').innerHTML=`
+    <div class="card card-hi"><div class="r3"><div><div class="csl">Containers</div><div class="csv">${c.cnts} × ${d.cs}</div></div><div><div class="csl">LBS / cnt</div><div class="csv">${Number(c.lpc).toLocaleString()}</div></div><div><div class="csl">Total LBS</div><div class="csv">${tl.toLocaleString()}</div></div></div><div class="r2" style="margin-top:10px;"><div><div class="csl">Buy price / LB</div><div class="csv gold">$${c.bp.toFixed(4)}</div></div><div><div class="csl">Total buy value</div><div class="csv">$${tb.toLocaleString(undefined,{maximumFractionDigits:0})}</div></div></div></div>
+    <div class="sl">Supplier negotiation</div>
+    <div class="card" style="cursor:pointer;" onclick="openNeg('${d.id}',${idx},null,'supplier')"><div style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:13px;font-weight:600;color:var(--text);">${d.sup} · Buy side</div>${sSumm}</div><div style="font-size:18px;color:var(--muted);">›</div></div></div>
+    <div class="sl">Buyer quotes</div>
+    ${c.buyers.map((bq,bi)=>{
+      const sp=bq.ap||bq.op;const isW=best&&bq.buyer===best.buyer&&bq.status==='accepted';
+      const mpl=sp?(sp-c.bp).toFixed(4):null;const tm=sp?((sp-c.bp)*tl).toLocaleString(undefined,{maximumFractionDigits:0}):null;
+      const ns=bq.ns==='done'?`<div style="font-size:10px;color:var(--green3);font-family:'DM Mono',monospace;">✓ Agreed $${bq.ap?.toFixed(4)}/LB</div>`:bq.neg.length?`<div style="font-size:10px;color:var(--gold2);font-family:'DM Mono',monospace;">${bq.neg.length} round(s) · tap to negotiate</div>`:`<div style="font-size:10px;color:var(--muted);">tap to negotiate</div>`;
+      return `<div class="bq-card ${isW?'winner':''} ${bq.status==='lost'?'lost-bq':''}" onclick="openNeg('${d.id}',${idx},${bi},'buyer')"><div class="bq-hdr"><div class="bq-name">${bq.buyer}${isW?'<span class="wtag">Best offer</span>':''}</div><span class="bq-st ${bq.status}">${bq.status}</span></div><div class="bq-stats"><div><div class="bql">Offer / LB</div><div class="bqv ${isW?'gr':''}">${sp?'$'+Number(sp).toFixed(4):'<span class="pe">pending</span>'}</div></div><div><div class="bql">Margin / LB</div><div class="bqv ${isW?'gr':''}">${mpl?'$'+mpl:'—'}</div></div><div><div class="bql">Total margin</div><div class="bqv ${isW?'gr':''}">${tm?'$'+tm:'—'}</div></div></div><div style="margin-top:8px;">${ns}</div></div>`;
+    }).join('')}
+    <button class="add-buyer-btn" onclick="event.stopPropagation();openBQMo('${d.id}',${idx})">+ Add buyer quote</button>
+    ${mHtml}`;
+}
+function openNeg(did,ci,bi,side){S.nDeal=did;S.nComm=ci;S.nBuyer=bi;S.nSide=side;S.pWho=null;document.getElementById('neg-back').onclick=()=>openDetail(did);showSc('neg');rNeg();}
+function rNeg(){
+  const d=S.deals.find(x=>x.id===S.nDeal);if(!d)return;
+  const c=d.comms[S.nComm];
+  const isBuy=S.nSide==='buyer';
+  const trail=isBuy?c.buyers[S.nBuyer].neg:c.sneg;
+  const ns=isBuy?c.buyers[S.nBuyer].ns:c.sns;
+  const isDone=ns==='done';const isLost=isBuy&&c.buyers[S.nBuyer].status==='lost';
+  const title=isBuy?`${c.buyers[S.nBuyer].buyer} · Sell side`:`${d.sup} · Buy side`;
+  const ap=isBuy?c.buyers[S.nBuyer].ap:c.abp;
+  const tl=c.cnts*c.lpc;
+  const tHtml=trail.map((t,ti)=>{
+    const prev=ti>0?trail[ti-1]:null;
+    const diff=prev?(t.price-prev.price):null;
+    const diffStr=diff!=null?(Math.abs(diff)<0.0001?'no change':(diff>0?'▲ +$'+Math.abs(diff).toFixed(4):'▼ -$'+Math.abs(diff).toFixed(4))):'opening';
+    const isMe=t.who==='me';
+    return `<div class="neg-row ${isMe?'mine':''}"><div class="neg-av ${isMe?'nav-me':'nav-them'}">${isMe?'Me':title.slice(0,2).toUpperCase()}</div><div class="neg-bubble"><div class="neg-who">${isMe?'You':title.split('·')[0].trim()} · ${t.time}</div><div class="neg-pb"><div class="neg-pl">${!isMe&&diff!=null?`<span class="neg-arr ${diff>0?'up':'down'}">${diffStr}</span>`:''}<div class="neg-pv">$${Number(t.price).toFixed(4)}</div>${isMe&&diff!=null?`<span class="neg-arr ${diff>0?'up':'down'}">${diffStr}</span>`:''}</div><div class="neg-mv">/LB · Round ${t.rnd}</div></div></div></div>`;
+  }).join('');
+  let acts='';
+  if(isDone){
+    acts=`<div class="neg-done-box"><div><div class="ndl">✓ Agreed price</div><div class="nds">${trail.length} rounds · ${trail[trail.length-1]?.time||''}</div></div><div class="ndv">$${Number(ap).toFixed(4)}</div></div>
+    <button class="cta-btn" onclick="openDetail('${d.id}')" style="margin-top:0;">← Back to Deal</button>`;
+  } else if(isLost){
+    acts=`<div style="background:rgba(217,79,79,0.1);border:1px solid rgba(217,79,79,0.25);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;"><div style="font-size:12px;color:var(--red2);font-weight:600;">✕ Lost bid — logged</div></div>`;
+  } else {
+    let inline='';
+    if(S.pWho){inline=`<div class="ci"><div class="ci-lbl">${S.pWho==='me'?'Your counter ($/LB)':'Their counter ($/LB)'}</div><div class="ci-row"><input class="ci-inp" id="ci" type="text" inputmode="decimal" placeholder="0.0000"><button class="ci-save" onclick="saveCounter()">Add</button></div><button class="ci-cancel" onclick="cancelCtr()">Cancel</button></div>`;}
+    acts=`${inline}${!S.pWho?`<div class="cb-row"><button class="cb cb-them" onclick="startCtr('them')">+ They countered</button><button class="cb cb-me" onclick="startCtr('me')">+ I countered</button></div>`:''}
+    <div class="neg-acts"><button class="neg-done-btn" onclick="markDone()">✓ Mark as Done</button><button class="neg-lost-btn" onclick="openLostMo()">✕ Mark as Lost</button></div>`;
+  }
+  document.getElementById('neg-body').innerHTML=`<div style="font-size:18px;font-weight:700;color:var(--gold2);margin-bottom:4px;">${title}</div><div style="font-size:11px;color:var(--muted2);font-family:'DM Mono',monospace;margin-bottom:14px;">${c.name} · ${tl.toLocaleString()} LBS · FAS ${d.port}</div><div class="sl">Negotiation trail</div>${!trail.length?'<div style="color:var(--muted);font-size:13px;padding:12px 0;">No rounds yet — add the first counter below.</div>':''}<div class="neg-thread">${tHtml}</div>${acts}`;
+  if(S.pWho)setTimeout(()=>{const e=document.getElementById('ci');if(e)e.focus();},80);
+}
+function startCtr(who){S.pWho=who;rNeg();}
+function cancelCtr(){S.pWho=null;rNeg();}
+function saveCounter(){
+  const v=parseFloat(document.getElementById('ci').value);
+  if(isNaN(v)||v<=0){alert('Enter a valid price.');return;}
+  const d=S.deals.find(x=>x.id===S.nDeal);const c=d.comms[S.nComm];
+  const trail=S.nSide==='buyer'?c.buyers[S.nBuyer].neg:c.sneg;
+  const lastRnd=trail.length?trail[trail.length-1].rnd:0;
+  const sameRnd=trail.length&&trail[trail.length-1].who!==S.pWho;
+  const rnd=sameRnd?lastRnd:lastRnd+1;
+  const now=new Date();const t=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes()+(now.getHours()<12?'am':'pm');
+  trail.push({who:S.pWho,price:v,time:t,rnd});
+  if(S.nSide==='buyer'){c.buyers[S.nBuyer].op=v;c.buyers[S.nBuyer].status='negotiating';}
+  else{c.bp=v;}
+  S.pWho=null;saveData();rNeg();
+}
+function markDone(){
+  const d=S.deals.find(x=>x.id===S.nDeal);const c=d.comms[S.nComm];
+  if(S.nSide==='buyer'){const bq=c.buyers[S.nBuyer];const lp=bq.neg.length?bq.neg[bq.neg.length-1].price:bq.op;bq.ap=lp;bq.op=lp;bq.status='accepted';bq.ns='done';}
+  else{const lp=c.sneg.length?c.sneg[c.sneg.length-1].price:c.bp;c.abp=lp;c.bp=lp;c.sns='done';}
+  saveData();rNeg();
+  setTimeout(()=>openDetail(S.nDeal),1500);
+}
+function openLostMo(){S.lmReason='Higher bid';['lm-comp','lm-price','lm-notes'].forEach(id=>document.getElementById(id).value='');document.querySelectorAll('#lm-reasons .rp').forEach((p,i)=>p.classList.toggle('active',i===0));openMo('lost-mo');}
+function setLMR(btn,r){document.querySelectorAll('#lm-reasons .rp').forEach(p=>p.classList.remove('active'));btn.classList.add('active');S.lmReason=r;}
+function confirmLost(){
+  const d=S.deals.find(x=>x.id===S.nDeal);const c=d.comms[S.nComm];
+  const trail=S.nSide==='buyer'?c.buyers[S.nBuyer].neg:c.sneg;
+  const lp=trail.length?trail[trail.length-1].price:(S.nSide==='buyer'?c.buyers[S.nBuyer].op:c.bp);
+  const tl=c.cnts*c.lpc;
+  if(S.nSide==='buyer'){c.buyers[S.nBuyer].status='lost';c.buyers[S.nBuyer].ns='lost';}
+  S.lostBids.unshift({id:'lb'+Date.now(),sup:S.nSide==='supplier'?d.sup:c.buyers[S.nBuyer].buyer,comm:c.name,side:S.nSide,bid:lp||0,their:parseFloat(document.getElementById('lm-price').value)||null,lbs:tl,port:d.port,comp:document.getElementById('lm-comp').value,reason:S.lmReason,notes:document.getElementById('lm-notes').value,date:new Date().toISOString().slice(0,10),trail:[...trail]});
+  closeMo('lost-mo');saveData();rNeg();
+}
+function openBQMo(did,ci){S.bqDeal=did;S.bqComm=ci;['bq-buyer','bq-price','bq-notes'].forEach(id=>document.getElementById(id).value='');openMo('bq-mo');}
+function saveBQ(){
+  const buyer=document.getElementById('bq-buyer').value;
+  if(!buyer||buyer==='new'){alert('Select a buyer.');return;}
+  const price=parseFloat(document.getElementById('bq-price').value);
+  const d=S.deals.find(x=>x.id===S.bqDeal);
+  const now=new Date();const t=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes()+(now.getHours()<12?'am':'pm');
+  d.comms[S.bqComm].buyers.push({buyer,op:isNaN(price)?null:price,status:'quoted',notes:document.getElementById('bq-notes').value,neg:isNaN(price)?[]:[{who:'me',price,time:t,rnd:1}],ns:'open',ap:null});
+  closeMo('bq-mo');saveData();rCQA(d,S.bqComm);
+}
+function filtDeals(f,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');rDeals(f);}
+function rDeals(f){
+  const el=document.getElementById('deals-list');
+  let deals=S.deals;if(f==='open')deals=deals.filter(d=>d.status==='open');if(f==='closed')deals=deals.filter(d=>d.status==='closed');
+  if(!deals.length){el.innerHTML='<div class="empty">No deals yet.<br>Tap New Deal to get started.</div>';return;}
+  el.innerHTML=deals.map(d=>{
+    const tl=d.comms.reduce((s,c)=>s+c.cnts*c.lpc,0);
+    const tm=d.comms.reduce((s,c)=>{const b=c.buyers.filter(x=>(x.ap||x.op)&&x.status!=='lost').sort((a,b)=>(b.ap||b.op)-(a.ap||a.op))[0];const sp=b?(b.ap||b.op):0;return s+(sp?(sp-c.bp)*c.cnts*c.lpc:0);},0);
+    return `<div class="swipe-wrap" id="sw-${d.id}">
+      <div class="del-reveal" onclick="delDeal('${d.id}')"><div class="del-reveal-icon">🗑</div><div class="del-reveal-lbl">DELETE</div></div>
+      <div class="deal-card" id="dc-${d.id}" onclick="openDetail('${d.id}')" ontouchstart="swipeStart(event,'${d.id}','deal')" ontouchend="swipeEnd(event,'${d.id}','deal')">
+        <div class="hover-del" onclick="event.stopPropagation();delDeal('${d.id}')">🗑</div>
+        <div class="dch"><div><div class="dsup">${d.sup}</div><div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;">${d.date}</div></div><span class="dst ${d.status==='open'?'ds-open':'ds-closed'}">${d.status}</span></div>
+        <div class="dcomm">${d.comms.map(c=>c.name).join(' · ')} · ${tl.toLocaleString()} LBS</div>
+        <div class="dftr"><span class="dport">FAS ${d.port}</span><span class="dmgn">${tm>0?'$'+tm.toLocaleString(undefined,{maximumFractionDigits:0}):'—'}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function rSups(){document.getElementById('sup-list').innerHTML=S.suppliers.map(s=>`<div class="con-card"><div class="con-av av-s">${s.co.slice(0,2).toUpperCase()}</div><div class="con-info"><div class="con-name">${s.co}</div><div class="con-det">${s.cn||'—'}${s.lo?' · '+s.lo:''}</div><div class="con-cnt">${S.deals.filter(d=>d.sup===s.co).length} deal(s)</div></div></div>`).join('');}
+function rBuys(){document.getElementById('buy-list').innerHTML=S.buyers.map(b=>`<div class="con-card"><div class="con-av av-b">${b.co.slice(0,2).toUpperCase()}</div><div class="con-info"><div class="con-name">${b.co}</div><div class="con-det">${b.cn||'—'}${b.lo?' · '+b.lo:''}</div><div class="con-cnt">${S.deals.flatMap(d=>d.comms.flatMap(c=>c.buyers)).filter(bq=>bq.buyer===b.co).length} quote(s)</div></div></div>`).join('');}
+function openCon(type){S.conType=type;document.getElementById('con-mo-title').innerHTML=`Add ${type==='supplier'?'Supplier':'Buyer'} <button class="mc" onclick="closeMo('con-mo')">×</button>`;['mo-co','mo-cn','mo-ph','mo-em','mo-lo'].forEach(id=>document.getElementById(id).value='');openMo('con-mo');}
+function saveCon(){
+  const co=document.getElementById('mo-co').value.trim();if(!co){alert('Company name required.');return;}
+  const c={id:(S.conType==='supplier'?'s':'b')+Date.now(),co,cn:document.getElementById('mo-cn').value,ph:document.getElementById('mo-ph').value,em:document.getElementById('mo-em').value,lo:document.getElementById('mo-lo').value};
+  if(S.conType==='supplier'){
+    S.suppliers.push(c);
+    ['sup-sel','lb-sup'].forEach(sid=>{const s=document.getElementById(sid);const o=document.createElement('option');o.value=co;o.textContent=co;s.insertBefore(o,s.lastElementChild);});
+    rSups();
+  }else{
+    S.buyers.push(c);
+    const s=document.getElementById('bq-buyer');const o=document.createElement('option');o.value=co;o.textContent=co;s.insertBefore(o,s.lastElementChild);
+    rBuys();
+  }
+  saveData();closeMo('con-mo');
+}
+function setLBR(btn,r){document.querySelectorAll('#lb-reasons .rp').forEach(p=>p.classList.remove('active'));btn.classList.add('active');S.lbReason=r;}
+function saveLB(){
+  const sup=document.getElementById('lb-sup').value;const comm=document.getElementById('lb-comm').value;
+  if(!sup||!comm){alert('Supplier and commodity required.');return;}
+  S.lostBids.unshift({id:'lb'+Date.now(),sup,comm,side:document.getElementById('lb-side').value,bid:parseFloat(document.getElementById('lb-bid').value)||0,their:parseFloat(document.getElementById('lb-their').value)||null,lbs:parseInt(document.getElementById('lb-lbs').value)||0,port:document.getElementById('lb-port').value,comp:document.getElementById('lb-comp').value,reason:S.lbReason,notes:document.getElementById('lb-notes').value,date:new Date().toISOString().slice(0,10),trail:[]});
+  ['lb-sup','lb-comm','lb-bid','lb-their','lb-lbs','lb-port','lb-comp','lb-notes'].forEach(id=>document.getElementById(id).value='');
+  saveData();rLBs();
+}
+function rLBs(){
+  const el=document.getElementById('lb-list');
+  if(!S.lostBids.length){el.innerHTML='<div class="empty">No lost bids yet.</div>';return;}
+  el.innerHTML=S.lostBids.map(lb=>`<div class="swipe-wrap" id="sw-${lb.id}">
+    <div class="del-reveal" onclick="delLB('${lb.id}')"><div class="del-reveal-icon">🗑</div><div class="del-reveal-lbl">DELETE</div></div>
+    <div class="lb-card" id="lbc-${lb.id}" ontouchstart="swipeStart(event,'${lb.id}','lb')" ontouchend="swipeEnd(event,'${lb.id}','lb')">
+      <div class="hover-del" onclick="event.stopPropagation();delLB('${lb.id}')">🗑</div>
+      <div class="lbh"><div><div class="lbs-name">${lb.sup}</div><div class="lbs-comm">${lb.comm} · FAS ${lb.port||'—'} · ${lb.date}</div></div><span class="lb-badge">LOST · ${lb.side}</span></div>
+      <div class="lb-grid"><div><div class="lbsl">Your bid</div><div class="lbsv red">$${lb.bid.toFixed(4)}</div></div><div><div class="lbsl">Their price</div><div class="lbsv">${lb.their?'$'+lb.their.toFixed(4):'unknown'}</div></div><div><div class="lbsl">Volume</div><div class="lbsv">${lb.lbs.toLocaleString()} LB</div></div></div>
+      <span class="lb-reason">${lb.reason}</span>${lb.comp?`<div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:6px;">Competitor: ${lb.comp}</div>`:''}${lb.trail.length?`<div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:6px;">▸ ${lb.trail.length} neg rounds attached</div>`:''}
+    </div>
+  </div>`).join('');
+}
+// ─── SWIPE TO DELETE ──────────────────────────────────────
+let swTouchX=0;
+function swipeStart(e,id,type){swTouchX=e.touches[0].clientX;document.querySelectorAll('.deal-card.swiped,.lb-card.swiped').forEach(el=>{if(el.id!=='dc-'+id&&el.id!=='lbc-'+id)el.classList.remove('swiped');});}
+function swipeEnd(e,id,type){
+  const dx=e.changedTouches[0].clientX-swTouchX;
+  const cardId=type==='deal'?'dc-'+id:'lbc-'+id;
+  const card=document.getElementById(cardId);if(!card)return;
+  if(dx<-40){card.classList.add('swiped');card.onclick=null;setTimeout(()=>{card.onclick=type==='deal'?()=>openDetail(id):null;},300);}
+  else if(dx>20){card.classList.remove('swiped');}
+}
+function delDeal(id){S.deals=S.deals.filter(d=>d.id!==id);saveData();rDeals('all');}
+function delLB(id){S.lostBids=S.lostBids.filter(lb=>lb.id!==id);saveData();rLBs();}
+</script>
+</body>
+</html>
